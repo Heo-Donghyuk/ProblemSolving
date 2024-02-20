@@ -1,20 +1,18 @@
 """
-시간 복잡도 : 10000*100000 -> 안될 것 같음 다른 방법이 필요
-스택을 이용할 수 있지 않을까?
-새로운 원소를 넣기 전 자기보다 큰 원소들은 빼자 그리고 빠진 녀석들은 정답 리스트에 값을 할당해 주자
-스택에 원소를 넣자 원소를 넣을 때 자신의 인덱스와 값을 넣자
-원소를 넣기 전에 자기보다 큰 가격을 가지는 원소들을 모두 빼자
-그리고 그 원소들을 현재 인덱스와 빠진 인덱스를 비교하여 정답 리스트에 값을 할당하자
+유형: 스택
+아이디어:
+- 스택을 이용하여 새로 들어오는 원소가 스택의 마지막 원소 보다 크거나 같을 떄 까지 pop하며
+    - pop되는 원소의 가격이 떨어지기 까지의 시간을 구하자
 """
 def solution(prices):
     stack = []
-    answer = [0]*len(prices)
-    for i, p in enumerate(prices):
-        while stack and stack[-1][1]>p:
-            popI, popP = stack.pop()
-            answer[popI] = i-popI
-        stack.append((i, p))
+    answer = [0]*(len(prices)+1)
+    for i, price in enumerate(prices, start=1):
+        while stack and stack[-1][1] > price:
+            time, p = stack.pop()
+            answer[time]=i-time
+        stack.append((i, price))
     while stack:
-        popI, popP = stack.pop()
-        answer[popI] = i-popI
-    return answer
+        time, p = stack.pop()
+        answer[time]=i-time
+    return answer[1:]
