@@ -72,7 +72,7 @@ def solution(game_board, table):
                 tablePiece.append(res)
     
     answer = 0
-    while tablePiece:
+    while tablePiece and answerPiece:
         piece = tablePiece.pop()
         for i, ansPiece in enumerate(answerPiece):
             if any(p==ansPiece for p in piece):
