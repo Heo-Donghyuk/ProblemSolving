@@ -14,20 +14,21 @@
 - 예외
 """
 from collections import defaultdict, deque
-
+from itertools import product
 def isConvertable(begin, target):
     if len(begin)!=len(target):
         return False
-    return True if sum(1 if a!=b else 0 for a, b in zip(begin, target))==1 else False
+    elif sum(1 if a!=b else 0 for a, b in zip(begin, target))!=1:
+        return False
+    else:
+        return True
 
 def solution(begin, target, words):
     # 딕셔너리 초기화
     convertDict = defaultdict(list)
-    for start in words+[begin]:
-        for end in words:
-            if isConvertable(start, end):
-                convertDict[start].append(end)
-    # BFS
+    for start, end in product(words+[begin], words):
+        if isConvertable(start, end):
+            convertDict[start].append(end)
     q = deque([(0, begin)])
     visited = set()
     while q:
