@@ -1,6 +1,19 @@
-SELECT NAME, COUNT(*) AS COUNT
+/*
+아이디어:
+- group by name으로 같은 이름을 가진 레코드를 모으자.
+    - count(name)으로 중복된 횟수를 세자 -> null 제거
+        - 명시적으로 where 절에서 name이 null인 경우를 제거하자
+    - having으로 count가 2이상인 레코드만 출력하자
+- 이후 이름 오름차순
+조건:
+- 동물 이름 중 두 번 이상 쓰인 이름과 해당 이름이 쓰인 횟수를 조회
+- 결과는 이름이 없는 동물은 집계에서 제외
+- 결과는 이름 순으로 조회
+주의:
+*/
+SELECT NAME, COUNT(NAME) AS COUNT
 FROM ANIMAL_INS
-# WHERE NAME IS NOT NULL
+WHERE NAME IS NOT NULL
 GROUP BY NAME
-HAVING COUNT(NAME)>=2
+HAVING COUNT>=2
 ORDER BY NAME
