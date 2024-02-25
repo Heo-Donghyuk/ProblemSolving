@@ -20,13 +20,12 @@ n, m = map(int, read())
 dictionary = {0:[0]*(n+1)}
 
 for row in range(1, n+1):
-    temp = [0]
     dictionary[row] = [0]
-    for i, num in enumerate(map(int, read()), start=1):
-        lastSum = temp[-1]
-        lastColSum = dictionary[row-1][i]
-        temp.append(lastSum+num)
-        dictionary[row].append(lastSum+lastColSum+num)
+    for col, num in enumerate(map(int, read()), start=1):
+        lastSum = dictionary[row][-1]
+        lastColSum = dictionary[row-1][col]
+        takeOff = dictionary[row-1][col-1]
+        dictionary[row].append(lastSum+lastColSum+num-takeOff)
         
 for _ in range(m):
     x1, y1, x2, y2 = map(int, read())
