@@ -13,6 +13,7 @@
 """
 import sys
 input = sys.stdin.readline
+print = sys.stdout.write
 read = lambda: input().split()
 
 n, m = map(int, read())
@@ -30,4 +31,4 @@ for row in range(1, n+1):
 for _ in range(m):
     x1, y1, x2, y2 = map(int, read())
     res = dictionary[x2][y2]-dictionary[x1-1][y2]-dictionary[x2][y1-1]+dictionary[x1-1][y1-1]
-    print(res)
+    print(str(res)+'\n')
