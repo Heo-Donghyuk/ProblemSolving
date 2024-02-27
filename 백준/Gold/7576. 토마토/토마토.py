@@ -1,48 +1,42 @@
-"""
-유형: BFS
-아이디어:
-- BFS로 토마토를 익게 만들자
-    - BFS가 완료된 후 0인(익지않은) 토마토가 하나라도 있다면 -1을 출력하자
-    - 아니라면 bfs의 결과를 출력하자
-주의:
--시간복잡도
--예외:
-    - 인덱스 주의
-    - 익은 토마토가 2개 이상일 수 있나?
-    - 익은 토마토가 없을 수 있나?
-"""
-import sys
-input = sys.stdin.readline
 from collections import deque
+import sys
+input=sys.stdin.readline
 
-def isValid(x, y):
-    if 0<=x<n and 0<=y<m and board[x][y]==0:
-        return True
-    return False
-
-m, n = map(int, input().split())
-board = []
-for _ in range(n):
-    board.append(list(map(int, input().split())))
-
-direction = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-q = deque()
-cost, remain = 0, 0
-for x in range(n):
-    for y in range(m):
-        if board[x][y]==1:
-            q.append((0, x, y))
-        elif board[x][y]==0:
-            remain+=1
-# BFS
-while q:
-    cost, x, y = q.popleft()
-    for d in direction:
-        nx, ny = map(sum, zip((x, y), d))
-        if isValid(nx, ny):
-            board[nx][ny]=-1
-            remain-=1
-            q.append((cost+1, nx, ny))
+def bfs(graph,sp):
+    queue=deque([])
+    t=0
+    for si,sj in sp:
+        queue.append((t,si,sj))
     
-# 안익은 토마토가 있는지 확인
-print(cost if not remain else -1)
+    while queue:
+        t,i,j=queue.popleft()
+        if i+1<n and graph[i+1][j]==0:
+            graph[i+1][j]=1
+            queue.append((t+1,i+1,j))
+        if i-1>-1 and graph[i-1][j]==0:
+            graph[i-1][j]=1
+            queue.append((t+1,i-1,j))
+        if j+1<m and graph[i][j+1]==0:
+            graph[i][j+1]=1
+            queue.append((t+1,i,j+1))
+        if j-1>-1 and graph[i][j-1]==0:
+            graph[i][j-1]=1
+            queue.append((t+1,i,j-1))
+    
+    return graph,t
+
+m,n=map(int,input().split())
+
+graph=[]
+for _ in range(n):
+    graph.append(list(map(int,input().split())))
+
+sp=[(i,j) for i in range(n) for j in range(m) if graph[i][j]==1]
+graph,result=bfs(graph,sp)
+
+for i in range(n):
+    if not all(graph[i]):
+        print(-1)
+        quit()
+        
+print(result)
