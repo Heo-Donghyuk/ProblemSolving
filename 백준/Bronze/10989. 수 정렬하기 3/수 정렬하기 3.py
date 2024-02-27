@@ -1,7 +1,9 @@
 import sys
-input = sys.stdin.readline
-from collections import Counter
-c = Counter(int(input()) for _ in range(int(input())))
-for key in sorted(c.keys()):
-    for _ in range(c[key]):
-        print(key)
+input=sys.stdin.readline
+arr = [0]*10001
+for _ in range(int(input())):
+    arr[int(input())]+=1
+for i in range(10001):
+    if arr[i]:
+        for _ in range(arr[i]):
+            print(i)
