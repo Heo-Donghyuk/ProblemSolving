@@ -27,7 +27,7 @@ for _ in range(int(input())):
     answer = 0
     visited = [False]*(n+1)
     people = [tuple(map(int, input().split())) for __ in range(m)]
-    people.sort(key=lambda x: (x[1], -x[0]))
+    people.sort(key=lambda x: (x[1], x[0]))
     for a, b in people:
         idx = find(a, b, visited)
         if idx:
