@@ -16,11 +16,6 @@ import sys
 input=sys.stdin.readline
 from collections import deque
 
-def isValid(x, y, remainJump):
-    if 0<=x<h and 0<=y<w and (x, y) not in visited[remainJump] and board[x][y]!=1:
-        return True
-    return False
-
 k = int(input())
 w, h = map(int, input().split())
 board = []
@@ -33,20 +28,23 @@ visited = [set() for _ in range(k+1)]
 direction = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 jumpDirection = [(1, 2), (1, -2), (-1, 2), (-1, -2),
                  (2, 1), (2, -1), (-2, 1), (-2, -1)]
-while q:
-    # print(q)
-    cost, remainJump, x, y = q.popleft()
-    if (x,y)==target:
-        break
-    for d in direction:
-        nx, ny = map(sum, zip((x, y), d))
-        if isValid(nx, ny, remainJump):
-            q.append((cost+1, remainJump, nx, ny))
-            visited[remainJump].add((nx, ny))
-    if remainJump>0:
-        for d in jumpDirection:
+def BFS():
+    while q:
+        cost, remainJump, x, y = q.popleft()
+        for d in direction:
             nx, ny = map(sum, zip((x, y), d))
-            if isValid(nx, ny, remainJump-1):
-                q.append((cost+1, remainJump-1, nx, ny))
-                visited[remainJump-1].add((nx, ny))
-print(cost if (x, y)==target else -1)
+            if (nx,ny)==target:
+                return cost+1
+            if 0<=nx<h and 0<=ny<w and (nx, ny) not in visited[remainJump] and board[nx][ny]!=1:
+                q.append((cost+1, remainJump, nx, ny))
+                visited[remainJump].add((nx, ny))
+        if remainJump>0:
+            for d in jumpDirection:
+                nx, ny = map(sum, zip((x, y), d))
+                if (nx,ny)==target:
+                    return cost+1
+                if 0<=nx<h and 0<=ny<w and (nx, ny) not in visited[remainJump-1] and board[nx][ny]!=1:
+                    q.append((cost+1, remainJump-1, nx, ny))
+                    visited[remainJump-1].add((nx, ny))
+    return -1
+print(0 if w==h==1 else BFS())
