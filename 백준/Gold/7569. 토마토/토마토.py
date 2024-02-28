@@ -13,13 +13,6 @@ input = sys.stdin.readline
 from itertools import product
 from collections import deque
 
-def isValid(x, y, z, board):
-    h, n, m = len(board), len(board[0]), len(board[0][0])
-    if 0<=x<h and 0<=y<n and 0<=z<m and board[x][y][z]==0:
-        return True
-    return False
-    
-
 m, n, h = map(int, input().split())
 board = [[[0]*m for _ in range(n)] for __ in range(h)]
 q = deque()
@@ -38,11 +31,10 @@ direction = [(0, 0, 1), (0, 1, 0), (1, 0, 0),
 while q:
     cost, x, y, z = q.popleft()
     for d in direction:
-        nx, ny, nz = map(sum, zip((x, y, z), d))
-        if isValid(nx, ny, nz, board):
-            board[nx][ny][nz]=-1
+        if 0<=x+d[0]<h and 0<=y+d[1]<n and 0<=z+d[2]<m and board[x+d[0]][y+d[1]][z+d[2]]==0:
+            board[x+d[0]][y+d[1]][z+d[2]]=-1
             remain-=1
-            q.append((cost+1, nx, ny, nz))
+            q.append((cost+1, x+d[0], y+d[1], z+d[2]))
 # 익지 않은 토마토 판별
 if remain!=0:
     cost=-1
