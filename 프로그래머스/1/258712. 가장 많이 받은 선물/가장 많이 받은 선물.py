@@ -1,16 +1,15 @@
 from itertools import combinations
 def solution(friends, gifts):
-    giftNum = {person: {m:{'send':0, 'receive':0} for m in friends} for person in friends}
+    giftNum = {person: {m:0 for m in friends} for person in friends}
     total = {m:{'send':0, 'receive':0} for m in friends}
     for gift in gifts:
         sender, receiver = gift.split()
-        giftNum[sender][receiver]['send']+=1
+        giftNum[sender][receiver]+=1
         total[sender]['send']+=1
-        giftNum[receiver][sender]['receive']+=1
         total[receiver]['receive']+=1
     answer = {person: 0 for person in friends}
     for p1, p2 in combinations(friends, 2):
-        send1, send2 = giftNum[p1][p2]['send'], giftNum[p2][p1]['send']
+        send1, send2 = giftNum[p1][p2], giftNum[p2][p1]
         if send1>send2:
             answer[p1]+=1
         elif send1<send2:
