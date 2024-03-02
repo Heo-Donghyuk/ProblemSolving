@@ -1,22 +1,26 @@
 /*
 아이디어:
-- 온, 오프라인 테이블을 세로로 합친다.
-    -> union all 사용
-- 2022년 3월에 해당하는 원소만 선택한다.
-- userId가 null로 표시되는지 확인하고
-- 정렬한다.
+- union all로 테이블 합치기
+    - offline 테이블에 null인 userId컬럼 만든 후 합치기
 조건:
-- 2022년 3월 오프라인/온라인 상품 판매 데이터
-- 판매 날짜, 상품ID, 유저ID, 판매량
-- 오프라인 테이블의 user_id 값은 Null로 표시
-- 판매일 오름차순, id 오름차순, 유저 id 오름차순
+- 2022년 3월
+- 판매 날짜, 상품ID, 유저ID, 판매량을 출력
+- OFFLINE_SALE 테이블의 판매 데이터의 USER_ID 값은 NULL 로 표시
+- 결과는 판매일을 기준으로 오름차순 정렬해주시고 
+    판매일이 같다면 상품 ID를 기준으로 오름차순, 
+    상품ID까지 같다면 유저 ID를 기준으로 오름차순 정렬해주세요.
+주의:
+- left join 필요한지
+- 중복 제거 필요한지
+- 서브쿼리 밖에서 조건 재확인 필요한지
 */
-WITH T AS (SELECT SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
-          FROM ONLINE_SALE
+WITH U AS (SELECT DATE_FORMAT(SALES_DATE, '%Y-%m-%d') AS SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
+           FROM ONLINE_SALE
+           WHERE SALES_DATE LIKE '2022-03%'
           UNION ALL
-          SELECT SALES_DATE, PRODUCT_ID, NULL AS USER_ID, SALES_AMOUNT
-          FROM OFFLINE_SALE)
-SELECT DATE_FORMAT(SALES_DATE, "%Y-%m-%d") AS SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
-FROM T
-WHERE SALES_DATE LIKE "2022-03%"
+          SELECT DATE_FORMAT(SALES_DATE, '%Y-%m-%d') AS SALES_DATE, PRODUCT_ID, NULL AS USER_ID, SALES_AMOUNT
+           FROM OFFLINE_SALE
+          WHERE SALES_DATE LIKE '2022-03%')
+SELECT *
+FROM U
 ORDER BY SALES_DATE, PRODUCT_ID, USER_ID
