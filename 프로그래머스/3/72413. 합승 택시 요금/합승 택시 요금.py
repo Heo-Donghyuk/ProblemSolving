@@ -1,27 +1,28 @@
-from heapq import heappush, heappop
+from heapq import *
+
+def dijkstra(n, start, graph):
+    INF = 10**9
+    res = [INF]*(n+1)
+    q = [(0, start)]
+    while q:
+        cost, node = heappop(q)
+        if cost>res[node]:
+            continue
+        for nextNode, nextCost in graph[node].items():
+            totalCost = cost+nextCost
+            if res[nextNode]>totalCost:
+                res[nextNode]=totalCost
+                heappush(q, (totalCost, nextNode))
+    return res
 
 def solution(n, s, a, b, fares):
-    INF = 10**9
-    graph = {i: {i:0} for i in range(n+1)}
+    graph = {i:{i:0} for i in range(n+1)}
     for node1, node2, cost in fares:
-        graph[node1][node2] = cost
-        graph[node2][node1] = cost
+        graph[node1][node2]=cost
+        graph[node2][node1]=cost
     
-    def djikstra(start):
-        res = [INF] * (n+1)
-        q = [(0, start)]
-        while q:
-            curCost, curNode = heappop(q)
-            if curCost>res[curNode]:
-                continue
-            else:
-                for nextNode, cost in graph[curNode].items():
-                    nextCost = curCost+cost
-                    if nextCost<res[nextNode]:
-                        res[nextNode]=nextCost
-                        heappush(q, (nextCost, nextNode))
-        return res
-    
-    ansGraph = {i: djikstra(i) for i in [s, a, b]}
-    answer = min([ansGraph[s][i]+ansGraph[a][i]+ansGraph[b][i] for i in range(n+1)])
+    S, A, B = dijkstra(n, s, graph), dijkstra(n, a, graph), dijkstra(n, b, graph)
+    answer = 10**9
+    for i in range(1, n+1):
+        answer = min(answer, S[i]+A[i]+B[i])
     return answer
